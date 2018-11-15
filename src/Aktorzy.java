@@ -1,4 +1,4 @@
-public enum Aktorzy,
+public enum Aktorzy
 {
 Robert_De_Niro,
 Al_Pacino,
