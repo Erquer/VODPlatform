@@ -4,7 +4,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Main extends Application {
 
@@ -27,6 +29,16 @@ public class Main extends Application {
         Film film = new Film(new Dealer());
 
         film.showData();
+
+        Thread[] threads = new Thread[10];
+        List<User> list = new ArrayList<>();
+        for(int i = 0; i < 10; i++){
+            list.add(new User());
+            threads[i] = new Thread(list.get(i));
+            threads[i].start();
+        }
+
+
 
     }
 }

@@ -15,6 +15,7 @@ public class Produkcja {
     private LocalDate data;
     private Dealer dealer;
     private List<Kraje> eKraje;
+    private List<Aktorzy> obsada;
     private double ocena;
     private int cena;
 
@@ -25,6 +26,7 @@ public class Produkcja {
 
     public Produkcja(Dealer dealer) {
         this.eKraje = new ArrayList<>();
+        this.obsada = new ArrayList<>();
         String alfa = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890";
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
@@ -59,6 +61,10 @@ public class Produkcja {
         for(int i = 0; i < temp; i++){
             eKraje.add(Kraje.values()[random.nextInt(Kraje.values().length)]);
         }
+        temp = random.nextInt(20)+5;
+        for(int i = 0; i < temp; i++){
+            this.obsada.add(Aktorzy.values()[random.nextInt(Aktorzy.values().length)]);
+        }
 
         //Ustalanie oceny
         this.ocena += random.nextDouble() * 10;
@@ -80,6 +86,10 @@ public class Produkcja {
 
     public LocalDate getData() {
         return data;
+    }
+
+    public List<Aktorzy> getObsada() {
+        return obsada;
     }
 
     public Dealer getDealer() {
