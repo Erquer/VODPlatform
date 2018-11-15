@@ -33,9 +33,11 @@ public class Film extends Produkcja {
 
     }
 
+    @Override
     public void showData(){
         System.out.println("Film: \n"+
                 "Tytuł: " +this.getNazwa() +
+                "\nGatunek: " + this.typ +
                 "\nOpis: " + this.getOpis() +
                 "\nCena: " + this.getCena() +
                 "\nData premiery: " + this.getData() +
@@ -51,5 +53,17 @@ public class Film extends Produkcja {
 
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Film: " +this.getNazwa() + " " + this.getOpis() + " " + this.getData() + " " + this.getCena()+ " " + this.typ);
+        for(int i = 0; i < this.geteKraje().size();i++){
+            sb.append( " " + this.geteKraje().get(i));
+        }
+        for(int i =0; i < this.linki.size(); i++){
+            sb.append(" " + this.linki.get(i) );
+        }
 
+        return sb.toString();
+    }
 }

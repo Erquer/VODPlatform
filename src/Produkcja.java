@@ -103,4 +103,17 @@ public class Produkcja {
     public double getOcena() {
         return ocena;
     }
+
+    public void showData(){
+        System.out.println("Film: \n"+
+                "Tytuł: " +this.getNazwa() +
+                "\nOpis: " + this.getOpis() +
+                "\nCena: " + this.getCena() +
+                "\nData premiery: " + this.getData() +
+                "\nOcena: " + this.getOcena()+ "\nLinki do zwiastunów: ");
+        System.out.println("Kraje produkcji: ");
+        for(int i = 0; i < this.geteKraje().size();i++){
+            System.out.println(this.geteKraje().get(i));
+        }
+    }
 }

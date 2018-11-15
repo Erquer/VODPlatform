@@ -3,12 +3,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Main extends Application {
+
+    private static volatile List<Film> filmy;
+    private static volatile List<Live> live;
+    private static volatile List<Serial> seriale;
+
+
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -30,15 +34,44 @@ public class Main extends Application {
 
         film.showData();
 
-        Thread[] threads = new Thread[10];
+        Thread threads = new Thread();
+        Test test= new Test();
+        Thread thread = new Thread(test);
         List<User> list = new ArrayList<>();
-        for(int i = 0; i < 10; i++){
-            list.add(new User());
-            threads[i] = new Thread(list.get(i));
-            threads[i].start();
+        list.add(new User());
+        threads = new Thread(list.get(0));
+        threads.start();
+        thread.start();
+        list.get(0).kupFilm(new Film(new Dealer()));
+        list.get(0).kupAbonament();
+        while(true){
+         test.kupUserowi(list.get(0));
+         try {
+             Thread.sleep(10000);
+         }catch (InterruptedException e){
+             e.printStackTrace();
+         }
         }
 
 
 
+
+
+    }
+
+    private static class Test implements Runnable{
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(10000);
+            }catch (InterruptedException e){
+                e.printStackTrace();
+            }
+
+
+        }
+        private void kupUserowi(User user){
+            user.kupFilm(new Film(new Dealer()));
+        }
     }
 }
