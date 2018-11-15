@@ -7,5 +7,6 @@ private boolean promocja;
     public Live(Dealer dealer) {
         super(dealer);
         this.promocja = false;
+        dealer.addProd(this);
     }
 }

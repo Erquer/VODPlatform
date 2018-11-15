@@ -16,6 +16,7 @@ private List<Sezon> sezons;
             this.sezons.add(new Sezon());
         }
         typ = Typ.values()[random.nextInt(Typ.values().length)];
+        dealer.addProd(this);
     }
 
     public void showData(){

@@ -30,6 +30,7 @@ public class Film extends Produkcja {
             sb.delete(0,sb.length());
         }
         this.dataWaznosci = random.nextInt(3)+1;
+        dealer.addProd(this);
 
     }
 
@@ -63,7 +64,7 @@ public class Film extends Produkcja {
         for(int i =0; i < this.linki.size(); i++){
             sb.append(" " + this.linki.get(i) );
         }
-
+        sb.append(" " +this.getDealer().getID());
         return sb.toString();
     }
 }
