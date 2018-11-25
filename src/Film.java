@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Film extends Produkcja {
-    private boolean promocja;
+   // private boolean promocja;
     private Typ typ;
     private List<String> linki;
     private int dataWaznosci;
@@ -12,7 +12,7 @@ public class Film extends Produkcja {
         super(dealer);
         this.linki = new ArrayList<>();
         Random random = new Random();
-        this.promocja = false;
+       // this.promocja = false;
         this.typ = Typ.values()[random.nextInt(Typ.values().length)];
         String alfa = "abcdefghijklmnopqrstuvwxyz";
         StringBuilder sb = new StringBuilder();
@@ -30,7 +30,7 @@ public class Film extends Produkcja {
             sb.delete(0,sb.length());
         }
         this.dataWaznosci = random.nextInt(3)+1;
-        dealer.addProd(this);
+        //dealer.addProd(this);
 
     }
 

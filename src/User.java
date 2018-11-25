@@ -10,7 +10,7 @@ public class User implements Runnable {
     private String email;
     private String cardNumber;
     private Abonament abonament;
-    private List<Produkcja> kupioneFilmy;
+    private List<Film> kupioneFilmy;
 
     @Override
     public void run() {
@@ -69,7 +69,7 @@ public class User implements Runnable {
         return sb.toString();
     }
 
-    public void kupFilm(Produkcja prod){
+    public void kupFilm(Film prod){
         this.kupioneFilmy.add(prod);
         System.out.println("User " + this.toString() + "kupił: ");
         prod.showData();
@@ -78,5 +78,9 @@ public class User implements Runnable {
     public void kupAbonament(){
         int i = new Random().nextInt(3);
         this.abonament = Abonament.values()[i];
+    }
+
+    public List<Film> getKupioneFilmy() {
+        return kupioneFilmy;
     }
 }

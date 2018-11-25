@@ -3,58 +3,43 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.util.ArrayList;
+
+import java.util.LinkedList;
 import java.util.List;
 
 public class Main extends Application {
 
-    private static volatile List<Film> filmy;
-    private static volatile List<Live> live;
-    private static volatile List<Serial> seriale;
+    private static volatile LinkedList<Film> filmy = new LinkedList<>();
+    private static volatile LinkedList<Live> live = new LinkedList<>();
+    private static volatile LinkedList<Serial> seriale = new LinkedList<>();
+
+    private static volatile LinkedList<Dealer> dealers = new LinkedList<>();
 
 
+    public static LinkedList<Live> getLive() {
+        return live;
+    }
+
+    public static LinkedList<Serial> getSeriale() {
+        return seriale;
+    }
+
+    public static LinkedList<Dealer> getDealers() {
+        return dealers;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("VOD Platform");
         primaryStage.setScene(new Scene(root, 600, 500));
         primaryStage.show();
+
     }
 
 
     public static void main(String[] args) {
         launch(args);
-
-        Serial serial = new Serial(new Dealer());
-
-        serial.showData();
-
-        Film film = new Film(new Dealer());
-
-        film.showData();
-
-        Thread threads = new Thread();
-        Test test= new Test();
-        Thread thread = new Thread(test);
-        List<User> list = new ArrayList<>();
-        list.add(new User());
-        threads = new Thread(list.get(0));
-        threads.start();
-        thread.start();
-        list.get(0).kupFilm(new Film(new Dealer()));
-        list.get(0).kupAbonament();
-        while(true){
-         test.kupUserowi(list.get(0));
-         try {
-             Thread.sleep(10000);
-         }catch (InterruptedException e){
-             e.printStackTrace();
-         }
-        }
-
-
-
 
 
     }
@@ -62,6 +47,7 @@ public class Main extends Application {
     private static class Test implements Runnable{
         @Override
         public void run() {
+            while (true)
             try {
                 Thread.sleep(10000);
             }catch (InterruptedException e){
@@ -73,5 +59,27 @@ public class Main extends Application {
         private void kupUserowi(User user){
             user.kupFilm(new Film(new Dealer()));
         }
+
     }
+
+    public static List<Film> getFilmy() {
+        return filmy;
+    }
+
+
+
+
+
+    public static void addProdukcja(Produkcja prod){
+        if(prod instanceof Film){
+            Main.filmy.add((Film)prod);
+        }else if(prod instanceof Serial){
+            Main.seriale.add((Serial) prod);
+        }else if(prod instanceof Live) Main.live.add((Live) prod);
+    }
+
+    public static void addDealer(Dealer dealer){
+        Main.getDealers().add(dealer);
+    }
+
 }

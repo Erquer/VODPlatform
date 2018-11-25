@@ -1,4 +1,3 @@
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +15,7 @@ private List<Sezon> sezons;
             this.sezons.add(new Sezon());
         }
         typ = Typ.values()[random.nextInt(Typ.values().length)];
-        dealer.addProd(this);
+       // dealer.addProd(this);
     }
 
     public void showData(){

@@ -1,7 +1,11 @@
-import java.text.SimpleDateFormat;
+import javafx.scene.image.Image;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,7 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Produkcja {
     //wspólne zmienne wszystkich produkcji
-
+    private Image obrazek;
     private String nazwa;
     private String opis;
     private LocalDate data;
@@ -24,9 +28,17 @@ public class Produkcja {
         return cena;
     }
 
+    public Image getObrazek() {
+        return obrazek;
+    }
+
     public Produkcja(Dealer dealer) {
         this.eKraje = new ArrayList<>();
         this.obsada = new ArrayList<>();
+        this.obrazek= new Image("obraz.png");
+
+
+
         String alfa = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890";
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
