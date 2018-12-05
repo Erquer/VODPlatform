@@ -1,3 +1,6 @@
+import javafx.scene.image.Image;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -6,7 +9,14 @@ public class Film extends Produkcja {
    // private boolean promocja;
     private Typ typ;
     private List<String> linki;
-    private int dataWaznosci;
+
+
+    public Film(Image obrazek, String nazwa, String opis, LocalDate data, Dealer dealer, List<Kraje> eKraje, List<Aktorzy> obsada, double ocena, int cena, Typ typ, List<String> linki) {
+        super(obrazek, nazwa, opis, data, dealer, eKraje, obsada, ocena, cena);
+        this.typ = typ;
+        this.linki = linki;
+
+    }
 
     public Film(Dealer dealer) {
         super(dealer);
@@ -29,7 +39,6 @@ public class Film extends Produkcja {
             this.linki.add(sb.toString());
             sb.delete(0,sb.length());
         }
-        this.dataWaznosci = random.nextInt(3)+1;
         //dealer.addProd(this);
 
     }

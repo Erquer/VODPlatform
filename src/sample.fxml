@@ -11,22 +11,25 @@
    <top>
       <HBox prefHeight="58.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="addButton" mnemonicParsing="false" onMouseClicked="#addButtonAction" text="Dodaj" />
+            <Button fx:id="addDealerButton" mnemonicParsing="false" onMouseClicked="#setAddDealerButton" text="Dodaj Dealera" />
+            <Button fx:id="addUserButton" mnemonicParsing="false" onMouseClicked="#setAddUserButton" text="Dodaj Usera" />
+            <Button fx:id="searchButton" mnemonicParsing="false" text="Wyszukaj" />
+            <Button fx:id="deleteButton" mnemonicParsing="false" text="Usuń" />
          </children></HBox>
    </top>
    <left>
       <VBox prefHeight="342.0" prefWidth="93.0" BorderPane.alignment="CENTER" />
    </left>
-   <center>
-      <ListView fx:id="daneProdukcji" orientation="HORIZONTAL" prefHeight="192.0" prefWidth="331.0" BorderPane.alignment="CENTER" />
-   </center>
    <right>
       <VBox>
       <ListView fx:id="listaDealer" BorderPane.alignment="CENTER" />
-      <ListView fx:id="listaKlient" BorderPane.alignment="CENTER" />
+      <ListView fx:id="listaUser" BorderPane.alignment="CENTER" />
       </VBox>
    </right>
    <bottom>
       <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" onMouseEntered="#showImage" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
    </bottom>
+   <center>
+      <HBox fx:id="testHbox" maxWidth="500.0" maxHeight="500" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
 </BorderPane>

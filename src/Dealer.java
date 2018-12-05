@@ -1,30 +1,35 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Dealer implements Runnable {
+public class Dealer implements Runnable, Serializable {
         private int cenaUslug;
         private String ID;
         private List<Film> stworzoneFilmy;
         private List<Serial> stworzoneSeriale;
         private List<Live> stworzoneLive;
-        boolean canWork;
+        private transient boolean canWork;
 
         @Override
         public void run() {
 
-                while(true){
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    this.addProd();
-                    if(!canWork){
-                        System.out.println("Zakonczyłem prace");
-                        break;
-                    }
+            while (Main.isCanDealerWork()) {
+                if (Main.isCanDealerWork() && canWork) {
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+                this.addProd();
+                if (!canWork) {
+                    System.out.println("Zakonczyłem prace");
+                    break;
+                }
+            }
+
+        }
 
 
         }
@@ -62,22 +67,22 @@ public class Dealer implements Runnable {
                     temp = new Film(this) ;
                     this.stworzoneFilmy.add((Film)temp);
                     Main.addProdukcja(temp);
-                    System.out.println("Stworzyłem film:" + temp);
+                  //  System.out.println("Stworzyłem film:" + temp);
                     return temp;
                 case 1:
                     temp = new Serial(this);
                     this.stworzoneSeriale.add((Serial)temp);
                     Main.addProdukcja(temp);
-                    System.out.println("Stworzyłem Serial:" + temp);
+                  //  System.out.println("Stworzyłem Serial:" + temp);
                     return temp;
                 case 2:
                    temp = new Live(this);
                    this.stworzoneLive.add((Live)temp);
                     Main.addProdukcja(temp);
-                    System.out.println("Stworzyłem Live:" + temp);
+                   // System.out.println("Stworzyłem Live:" + temp);
                    return temp;
                 default:
-                    System.out.println("coś poszło źle wylosowano: " + i);
+                    System.out.println("coś poszło źle, wylosowano: " + i);
                     return null;
             }
 

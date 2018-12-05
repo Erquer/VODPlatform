@@ -1,3 +1,6 @@
+import javafx.scene.image.Image;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -6,6 +9,12 @@ import java.util.Random;
 public class Serial extends Produkcja {
 private Typ typ;
 private List<Sezon> sezons;
+
+    public Serial(Image obrazek, String nazwa, String opis, LocalDate data, Dealer dealer, List<Kraje> eKraje, List<Aktorzy> obsada, double ocena, int cena, Typ typ, List<Sezon> sezons) {
+        super(obrazek, nazwa, opis, data, dealer, eKraje, obsada, ocena, cena);
+        this.typ = typ;
+        this.sezons = sezons;
+    }
 
     public Serial(Dealer dealer) {
         super(dealer);

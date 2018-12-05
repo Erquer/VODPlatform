@@ -1,9 +1,6 @@
 import javafx.scene.image.Image;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +8,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public class Produkcja {
+public class Produkcja implements Serializable {
     //wspólne zmienne wszystkich produkcji
     private Image obrazek;
     private String nazwa;
@@ -32,12 +29,29 @@ public class Produkcja {
         return obrazek;
     }
 
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+
+
+    public Produkcja(Image obrazek, String nazwa, String opis, LocalDate data, Dealer dealer, List<Kraje> eKraje, List<Aktorzy> obsada, double ocena, int cena) {
+        this.obrazek = obrazek;
+        this.nazwa = nazwa;
+        this.opis = opis;
+        this.data = data;
+        this.dealer = dealer;
+        this.eKraje = eKraje;
+        this.obsada = obsada;
+        this.ocena = ocena;
+        this.cena = cena;
+
+    }
+
     public Produkcja(Dealer dealer) {
         this.eKraje = new ArrayList<>();
         this.obsada = new ArrayList<>();
         this.obrazek= new Image("obraz.png");
-
-
 
         String alfa = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890";
         Random random = new Random();
