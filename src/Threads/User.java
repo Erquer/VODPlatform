@@ -1,3 +1,12 @@
+package Threads;
+
+import Enums.Abonament;
+import GUI.Main;
+import Produkcje.Film;
+import Produkcje.Live;
+import Produkcje.Produkcja;
+import Produkcje.Serial;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -154,34 +163,34 @@ public class User implements Runnable, Serializable {
                         this.kupioneFilmy.add(prod);
                         Main.buyProduction(prod);
                         this.datyKupionych.put(prod, mainDate.plusWeeks(3));
-                        System.out.println(this.ID + " kupiłem Film " + prod.getNazwa() + " i mogę go oglądać do" + this.datyKupionych.get(prod));
+                        System.out.println(this.ID + " kupiłem Produkcje.Film " + prod.getNazwa() + " i mogę go oglądać do" + this.datyKupionych.get(prod));
                     } else if (prod instanceof Live && ((Live) prod).getLiveStream().isBefore(mainDate)) {
                         this.kupioneFilmy.add(prod);
                         this.datyKupionych.put(prod, ((Live) prod).getLiveStream());
                         Main.buyProduction(prod);
-                        System.out.println(this.ID + " kupiłem Live " + prod.getNazwa() + " i jest dostępny w " + this.datyKupionych.get(prod));
+                        System.out.println(this.ID + " kupiłem Produkcje.Live " + prod.getNazwa() + " i jest dostępny w " + this.datyKupionych.get(prod));
                     } else if (prod instanceof Serial) {
                         this.kupioneFilmy.add(prod);
                         this.datyKupionych.put(prod, mainDate.plusWeeks(3));
                         Main.buyProduction(prod);
-                        System.out.println(this.ID + " kupiłem Serial " + prod.getNazwa() + " i mogę go oglądać do" + this.datyKupionych.get(prod));
+                        System.out.println(this.ID + " kupiłem Produkcje.Serial " + prod.getNazwa() + " i mogę go oglądać do" + this.datyKupionych.get(prod));
                     }
 
                 } else if (abonament != null) {
                     if (prod instanceof Film) {
                         this.kupioneFilmy.add(prod);
-                       // Main.buyProduction(prod);
+                       // GUI.Main.buyProduction(prod);
                         this.datyKupionych.put(prod, this.terminAbonamentu);
                         System.out.println(this.ID + " dodałem do biblioteki " + prod.getNazwa() + " i mogę go oglądać do " + this.datyKupionych.get(prod));
                     } else if (prod instanceof Live && prod.getData().isBefore(mainDate)) {
                         this.kupioneFilmy.add(prod);
                         this.datyKupionych.put(prod, ((Live) prod).getLiveStream());
                         Main.buyProduction(prod);
-                        System.out.println(this.ID + " kupiłem Live " + prod.getNazwa() + " i jest dostępny w " + this.datyKupionych.get(prod));
+                        System.out.println(this.ID + " kupiłem Produkcje.Live " + prod.getNazwa() + " i jest dostępny w " + this.datyKupionych.get(prod));
                     } else if (prod instanceof Serial) {
                         this.kupioneFilmy.add(prod);
                         this.datyKupionych.put(prod, this.terminAbonamentu);
-                     //   Main.buyProduction(prod);
+                     //   GUI.Main.buyProduction(prod);
                         System.out.println(this.ID + " dodałem do biblioteki " + prod.getNazwa() + " i mogę go oglądać do " + this.datyKupionych.get(prod));
                     }
                 }
@@ -250,7 +259,7 @@ public class User implements Runnable, Serializable {
                     }
                 }
             } else if (produkcja instanceof Live && datyKupionych.get(produkcja).isEqual(Main.getDate())) {
-                System.out.println(this.ID + " Live ogląda- " + produkcja.getNazwa());
+                System.out.println(this.ID + " Produkcje.Live ogląda- " + produkcja.getNazwa());
                 try {
                     Thread.sleep(6000);
                 } catch (InterruptedException e) {
@@ -269,7 +278,7 @@ public class User implements Runnable, Serializable {
                     this.datyKupionych.remove(produkcja);
                     this.kupioneFilmy.remove(produkcja);
                 }else if(produkcja instanceof Live && this.datyKupionych.get(produkcja).isAfter(Main.getDate())){
-                    System.out.println("Bez Abonamentu|Usuwam Live: " + produkcja.getNazwa());
+                    System.out.println("Bez Abonamentu|Usuwam Produkcje.Live: " + produkcja.getNazwa());
                     this.datyKupionych.remove(produkcja);
                     this.kupioneFilmy.remove(produkcja);
                 }
@@ -278,11 +287,11 @@ public class User implements Runnable, Serializable {
             for(Iterator<Produkcja> iterator = this.kupioneFilmy.iterator();iterator.hasNext();){
                 Produkcja produkcja = iterator.next();
                 if(this.datyKupionych.get(produkcja).isEqual(Main.getDate()) && !(produkcja instanceof Live)){
-                    System.out.println("Abonament|Usuwam z biblioteki: " + produkcja.getNazwa());
+                    System.out.println("Enums.Abonament|Usuwam z biblioteki: " + produkcja.getNazwa());
                     this.kupioneFilmy.remove(produkcja);
                     this.datyKupionych.remove(produkcja);
                 }else if(produkcja instanceof Live && this.datyKupionych.get(produkcja).isEqual(Main.getDate())){
-                    System.out.println("Abonament|Usuwam Live: " + produkcja.getNazwa());
+                    System.out.println("Enums.Abonament|Usuwam Produkcje.Live: " + produkcja.getNazwa());
                     this.datyKupionych.remove(produkcja);
                     this.kupioneFilmy.remove(produkcja);
                 }
@@ -294,7 +303,7 @@ public class User implements Runnable, Serializable {
             if(terminAbonamentu.isEqual(mainDate)){
                 abonament = null;
                 terminAbonamentu = null;
-                System.out.println("Abonament się skończył u " + this.ID );
+                System.out.println("Enums.Abonament się skończył u " + this.ID );
             }
         }
     }

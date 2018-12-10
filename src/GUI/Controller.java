@@ -1,3 +1,11 @@
+package GUI;
+
+import Produkcje.Film;
+import Produkcje.Live;
+import Produkcje.Produkcja;
+import Produkcje.Serial;
+import Threads.Dealer;
+import Threads.User;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -15,8 +23,6 @@ import java.util.Optional;
 
 public class Controller {
     @FXML
-    private ImageView imageView;
-    @FXML
     private ListView<Dealer> listaDealer;
     @FXML
     private ListView<Produkcja> daneProdukcji;
@@ -29,36 +35,90 @@ public class Controller {
     @FXML
     private ListView<User> listaUser;
     @FXML
-    private HBox testHbox;
+    private ListView<Produkcja> produkcje;
+    @FXML
+    private HBox filmBox;
+    @FXML
+    private HBox serialBox;
+    @FXML
+    private HBox liveBox;
 
+    public HBox getFilmBox() {
+        return filmBox;
+    }
 
-//    private ObservableList<Produkcja>  films = FXCollections.observableArrayList();
-//    private ObservableList<Dealer> dealers = FXCollections.observableArrayList();
+    public HBox getSerialBox() {
+        return serialBox;
+    }
 
+    public HBox getLiveBox() {
+        return liveBox;
+    }
+
+   public void addProd(Produkcja produkcja){
+        if(produkcja instanceof Film){
+            filmBox.getChildren().add(new ImageView(produkcja.getObrazek()));
+        }else if(produkcja instanceof Serial){
+            serialBox.getChildren().add(new ImageView(produkcja.getObrazek()));
+        }
+        else if(produkcja instanceof Live){
+            liveBox.getChildren().add(new ImageView(produkcja.getObrazek()));
+        }
+   }
     @FXML
     public void initialize(){
-        testHbox.scaleShapeProperty().setValue(true);
-        testHbox.setSpacing(5);
-        testHbox.getParent().autosize();
-
         listaDealer.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         listaDealer.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Dealer>() {
             @Override
             public void changed(ObservableValue<? extends Dealer> observable, Dealer oldValue, Dealer newValue) {
-//                daneProdukcji.getItems().clear();
-//                daneProdukcji.refresh();
-//                System.out.println("Zmieniono wybór dealera na: " + newValue );
-//                Dealer dealer = listaDealer.getSelectionModel().getSelectedItem();
-//                for(int i = 0; i < dealer.getStworzoneProdukcje().size();i++){
-//                    daneProdukcji.getItems().add(dealer.getStworzoneProdukcje().get(i));
-//                }
-                testHbox.getChildren().removeAll();
-                testHbox.getChildren().clear();
-                Dealer dealer = listaDealer.getSelectionModel().getSelectedItem();
-                for(int i = 0; i < dealer.getStworzoneProdukcje().size(); i++){
-                    testHbox.getChildren().add(new ImageView(dealer.getStworzoneProdukcje().get(i).getObrazek()));
+
+                filmBox.getChildren().clear();
+                serialBox.getChildren().clear();
+                liveBox.getChildren().clear();
+
+
+
+                if(Main.getFilmy().size() > 0) {
+                    for (Produkcja produkcja : Main.getFilmy()) {
+                        produkcje.getItems().add(produkcja);
+                        if (produkcja instanceof Film) {
+                            filmBox.getChildren().add(new ImageView(produkcja.getObrazek()));
+                        } else if (produkcja instanceof Serial) {
+                            serialBox.getChildren().add(new ImageView(produkcja.getObrazek()));
+                        } else if (produkcja instanceof Live) {
+                            liveBox.getChildren().add(new ImageView(produkcja.getObrazek()));
+                        }
+                    }
                 }
 
+           }
+        });
+
+
+        produkcje.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getButton().equals(MouseButton.PRIMARY)){
+                    if(event.getClickCount() == 2){
+                        Dialog<ButtonType> dialog = new Dialog<>();
+                        dialog.initOwner(mainBorderPane.getScene().getWindow());
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        fxmlLoader.setLocation(getClass().getResource("GUI/productionDetails.fxml"));
+                        try {
+                            dialog.getDialogPane().setContent(fxmlLoader.load());
+                        }catch (IOException e){
+                            e.printStackTrace();
+                            return;
+                        }
+                        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+                        ProductionController controller = fxmlLoader.getController();
+                        controller.setTextFields(produkcje.getSelectionModel().getSelectedItem());
+                        Optional<ButtonType> result = dialog.showAndWait();
+                        if(result.isPresent() && result.get() == ButtonType.OK){
+                            dialog.close();
+                        }
+                    }
+                }
             }
         });
 
@@ -72,7 +132,7 @@ public class Controller {
                         dialog.setTitle("Sczczegóły dealera");
                         dialog.setHeaderText("Tutaj wyświetlane są informacje nt. Dealera");
                         FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("details.fxml"));
+                        fxmlLoader.setLocation(getClass().getResource("GUI/details.fxml"));
                         try {
                             dialog.getDialogPane().setContent(fxmlLoader.load());
                         } catch (IOException e) {
@@ -94,12 +154,14 @@ public class Controller {
             }
         });
 
+
     }
 
 
 
     @FXML
-    public void showImage(){
+    public void showImage(MouseEvent event){
+
     }
 
     @FXML
@@ -121,9 +183,9 @@ public class Controller {
     public void dealerList(){
        // if(daneProdukcji.getItems().size() > 0) daneProdukcji.getItems().removeAll();
 //        daneProdukcji.refresh();
-//        Dealer deal = listaDealer.getSelectionModel().getSelectedItem();
+//        Threads.Dealer deal = listaDealer.getSelectionModel().getSelectedItem();
 //        System.out.println("=============================================");
-//        for(Produkcja produkcja:deal.getStworzoneProdukcje()){
+//        for(Produkcje.Produkcja produkcja:deal.getStworzoneProdukcje()){
 //            System.out.println(produkcja);
 //        }
 //        System.out.println("=============================================");

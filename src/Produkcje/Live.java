@@ -1,3 +1,9 @@
+package Produkcje;
+
+import Enums.Aktorzy;
+import Enums.Kraje;
+import GUI.Main;
+import Threads.Dealer;
 import javafx.scene.image.Image;
 
 import java.time.LocalDate;

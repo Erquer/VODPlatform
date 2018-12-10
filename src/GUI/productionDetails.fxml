@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<?import javafx.scene.control.ListView?>
+<DialogPane headerText="Dane Produkcji" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.ProductionController">
+   <content>
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+         <Label text="Tytuł" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+          <TextField fx:id="tytul" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+          <Label text="Opis" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+          <TextField fx:id="opis" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+          <Label text="Data produkcji" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+          <TextField fx:id="data" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+          <Label text="Dystrybutor" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+          <TextField fx:id="dealer" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+          <Label text="Kraje" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+          <ListView fx:id="kraje" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+          <Label text="Linki" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+          <ListView fx:id="linki" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+          <Label text="Cena" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+          <TextField fx:id="cena" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+          <Label text="Ocena" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+          <TextField fx:id="ocena" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+          <Label text="Aktorzy" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+          <ListView fx:id="aktorzy" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+      </GridPane>
+   </content>
+</DialogPane>

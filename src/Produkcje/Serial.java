@@ -1,3 +1,9 @@
+package Produkcje;
+
+import Enums.Aktorzy;
+import Enums.Kraje;
+import Enums.Typ;
+import Threads.Dealer;
 import javafx.scene.image.Image;
 
 import java.time.LocalDate;
@@ -5,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
 
 public class Serial extends Produkcja {
 private Typ typ;
@@ -28,7 +35,7 @@ private List<Sezon> sezons;
     }
 
     public void showData(){
-        System.out.println("Serial o: " + sezons.size()+" sezonach \nnazwa: " + this.getNazwa() +
+        System.out.println("Produkcje.Serial o: " + sezons.size()+" sezonach \nnazwa: " + this.getNazwa() +
                 "\nOpis: " + this.getOpis() +
                 "\nCena: " + this.getCena() +
                 "\nData produkcji: " + this.getData().toString() +
@@ -90,6 +97,6 @@ private List<Sezon> sezons;
 
     @Override
     public String toString() {
-        return "Serial o: " + sezons.size() + " sezonach";
+        return "Produkcje.Serial o: " + sezons.size() + " sezonach";
     }
 }

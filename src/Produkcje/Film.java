@@ -1,3 +1,9 @@
+package Produkcje;
+
+import Enums.Aktorzy;
+import Enums.Kraje;
+import Enums.Typ;
+import Threads.Dealer;
 import javafx.scene.image.Image;
 
 import java.time.LocalDate;
@@ -10,6 +16,13 @@ public class Film extends Produkcja {
     private Typ typ;
     private List<String> linki;
 
+    public Typ getTyp() {
+        return typ;
+    }
+
+    public List<String> getLinki() {
+        return linki;
+    }
 
     public Film(Image obrazek, String nazwa, String opis, LocalDate data, Dealer dealer, List<Kraje> eKraje, List<Aktorzy> obsada, double ocena, int cena, Typ typ, List<String> linki) {
         super(obrazek, nazwa, opis, data, dealer, eKraje, obsada, ocena, cena);
@@ -45,7 +58,7 @@ public class Film extends Produkcja {
 
     @Override
     public void showData(){
-        System.out.println("Film: \n"+
+        System.out.println("Produkcje.Film: \n"+
                 "Tytuł: " +this.getNazwa() +
                 "\nGatunek: " + this.typ +
                 "\nOpis: " + this.getOpis() +
@@ -56,7 +69,7 @@ public class Film extends Produkcja {
         for(int i = 0; i < linki.size();i++){
             System.out.println(linki.get(i));
         }
-        System.out.println("Kraje produkcji: ");
+        System.out.println("Enums.Kraje produkcji: ");
         for(int i = 0; i < this.geteKraje().size();i++){
             System.out.println(this.geteKraje().get(i));
         }
@@ -66,7 +79,7 @@ public class Film extends Produkcja {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Film: " +this.getNazwa() + " " + this.getOpis() + " " + this.getData() + " " + this.getCena()+ " " + this.typ);
+        sb.append("Produkcje.Film: " +this.getNazwa() + " " + this.getOpis() + " " + this.getData() + " " + this.getCena()+ " " + this.typ);
         for(int i = 0; i < this.geteKraje().size();i++){
             sb.append( " " + this.geteKraje().get(i));
         }

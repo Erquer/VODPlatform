@@ -1,3 +1,5 @@
+package Enums;
+
 public enum Aktorzy
 {
 Robert_De_Niro,

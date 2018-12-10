@@ -1,3 +1,9 @@
+package Produkcje;
+
+import Enums.Aktorzy;
+import Enums.Kraje;
+import Enums.Obrazy;
+import Threads.Dealer;
 import javafx.scene.image.Image;
 
 import java.io.Serializable;
@@ -51,11 +57,19 @@ public class Produkcja implements Serializable {
     public Produkcja(Dealer dealer) {
         this.eKraje = new ArrayList<>();
         this.obsada = new ArrayList<>();
-        this.obrazek= new Image("obraz.png");
-
-        String alfa = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890";
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
+
+        int in = random.nextInt(Obrazy.values().length);
+        sb.append("Produkcje\\"+Obrazy.values()[in]+".png");
+
+        this.obrazek= new Image(sb.toString());
+
+        sb.delete(0,sb.length());
+
+        String alfa = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890";
+
+
         int ind;
         int temp = random.nextInt(20) + 10;
 
@@ -131,13 +145,13 @@ public class Produkcja implements Serializable {
     }
 
     public void showData(){
-        System.out.println("Film: \n"+
+        System.out.println("Produkcje.Film: \n"+
                 "Tytuł: " +this.getNazwa() +
                 "\nOpis: " + this.getOpis() +
                 "\nCena: " + this.getCena() +
                 "\nData premiery: " + this.getData() +
                 "\nOcena: " + this.getOcena()+ "\nLinki do zwiastunów: ");
-        System.out.println("Kraje produkcji: ");
+        System.out.println("Enums.Kraje produkcji: ");
         for(int i = 0; i < this.geteKraje().size();i++){
             System.out.println(this.geteKraje().get(i));
         }

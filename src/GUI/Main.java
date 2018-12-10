@@ -1,3 +1,8 @@
+package GUI;
+
+import Produkcje.Produkcja;
+import Threads.Dealer;
+import Threads.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -44,8 +49,13 @@ public class Main extends Application {
     public static volatile LinkedList<Thread> dealerThreads = new LinkedList<>();
     public static volatile LinkedList<Thread> userThreads = new LinkedList<>();
 
-    private static volatile LocalDate date = LocalDate.of(2015,1,1);;
+    private static volatile LocalDate date = LocalDate.of(2015,1,1);
 
+    private static Controller controller;
+
+    public static Controller getController() {
+        return controller;
+    }
 
     private static final String pathDealers = "Dealers.txt";
     private static final String pathUsers = "Users.txt";
@@ -62,12 +72,16 @@ public class Main extends Application {
     }
     @Override
     public void start(Stage primaryStage) throws Exception{
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(this.getClass().getResource("sample.fxml"));
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("VOD Platform");
         primaryStage.setScene(new Scene(root, 600, 500));
         primaryStage.show();
         dniStrat = 0;
         saldo = 0;
+        controller = loader.getController();
+
 
 
 
