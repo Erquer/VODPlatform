@@ -1,18 +1,26 @@
 package GUI;
 
+import Produkcje.Film;
+import Produkcje.Live;
 import Produkcje.Produkcja;
 import Threads.Dealer;
 import Threads.User;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.*;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
+/**
+ *
+ */
 public class Main extends Application {
 
     //Monitory
@@ -40,6 +48,8 @@ public class Main extends Application {
 
     //sekcje krytyczne
     private static int dniStrat;
+    private static boolean promocja;
+    private static int pro;
     private static volatile double saldo;
 
     private static volatile LinkedList<Dealer> dealers = new LinkedList<>();
@@ -53,16 +63,24 @@ public class Main extends Application {
 
     private static Controller controller;
 
-    public static Controller getController() {
-        return controller;
+    //public static Controller getController() {
+       // return controller;
+   // }
+
+    private static final String pathDealers = "Dealers.bin";
+    private static final String pathUsers = "Users.txt";
+
+    public static LinkedList<User> getUsers() {
+        return users;
     }
 
-    private static final String pathDealers = "Dealers.txt";
-    private static final String pathUsers = "Users.txt";
-    private static final String pathFilms = "Films.txt";
-    private static final String pathSerials = "Serials.txt";
-    private static final String pathLives = "Lives.txt";
+    public static LinkedList<Thread> getDealerThreads() {
+        return dealerThreads;
+    }
 
+    public static LinkedList<Thread> getUserThreads() {
+        return userThreads;
+    }
 
     public static LinkedList<Dealer> getDealers() {
         return dealers;
@@ -70,19 +88,26 @@ public class Main extends Application {
     public static LocalDate getDate() {
         return date;
     }
+
+    public static double getSaldo() {
+        return saldo;
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(this.getClass().getResource("sample.fxml"));
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+       FXMLLoader loader = new FXMLLoader();
+       loader.setLocation(this.getClass().getResource("/GUI/sample.fxml"));
+
+        Parent root = loader.load();
         primaryStage.setTitle("VOD Platform");
-        primaryStage.setScene(new Scene(root, 600, 500));
+        primaryStage.setScene(new Scene(root, 680, 800));
         primaryStage.show();
         dniStrat = 0;
         saldo = 0;
         controller = loader.getController();
+        //Controller do zmiennej (nullPointerExeption)
 
-
+        System.out.println(controller.toString());
 
 
         // symulacja czasu.
@@ -93,14 +118,18 @@ public class Main extends Application {
                     while (canProgramWork) {
                         //System.out.println("było:" + date);
                         setDate(date.plusDays(1));
+                        isPromocja();
                         try {
-                            sleep(10000);
+                            sleep(5000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        //checkLooses();
-                        // System.out.println("Po sprawdzeniu strat jest " + saldo + " i dni z rzędu strat: " + dniStrat );
-                       // System.out.println("jest:" + date);
+                        checkLooses();
+                        Platform.runLater(
+                                ()->{
+                                    controller.setDataLabel(date);
+                                    controller.setSaldoLabel(Double.toString(saldo));
+                                });
 
                     }
                 }
@@ -122,13 +151,21 @@ public class Main extends Application {
     }
 
 
-
+    /**
+     * @param prod
+     * dodanie nowej Produkcji do list
+     */
     public static void addProdukcja(Produkcja prod) {
         synchronized (guardianProduction) {
           production.add(prod);
+          controller.addProd(prod);
         }
     }
 
+    /**
+     * @param dealer
+     * dodanie do list nowego dealera i stworzenie nowego wątku Dealera
+     */
     public static void addDealer(Dealer dealer){
         synchronized (guardianDealer) {
             Main.getDealers().add(dealer);
@@ -139,6 +176,10 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * @param user
+     * dodanie usera do listy Userów, listy wątków oraz stworzenie nowego wątku Usera
+     */
     public static void addUser(User user){
         synchronized (guardianUser){
             users.addLast(user);
@@ -149,20 +190,65 @@ public class Main extends Application {
         }
     }
 
+    public static Controller getController() {
+        return controller;
+    }
+
+    /**
+     * @param dealer
+     * Usunięcie dealera
+     */
     synchronized
-    public static void pay(Dealer dealer){
+    public static void deleteDealer(Dealer dealer){
+        dealers.remove(dealer);
+        dealerThreads.remove(dealer);
+        for(User user: users){
+            for(int i = 0; i < dealer.getStworzoneProdukcje().size(); i++) {
+                if(user.getKupioneFilmy().contains(dealer.getStworzoneProdukcje().get(i))){
+                    user.getKupioneFilmy().remove(dealer.getStworzoneProdukcje().get(i));
+                    user.getDatyKupionych().remove(dealer.getStworzoneProdukcje().get(i));
+                }
+            }
+        }
+        production.removeAll(dealer.getStworzoneProdukcje());
+        dealer.setCanWork(false);
+    }
+
+    /**
+     * @param dealer
+     * Funkcja płatności platformy dealerowi za usługę.
+     */
+    synchronized
+    public static void payToDealer(Dealer dealer){
         synchronized (guardianPayment) {
-            saldo -= dealer.getCenaUslug();
+            if(dealer.getLastPayment() != null && dealer.getLastPayment().isEqual(Main.getDate().minusDays(30))) {
+                saldo -= dealer.getCenaUslug();
+                dealer.setLastPayment(Main.getDate());
+            }else if(dealer.getLastPayment() == null){
+                saldo -= dealer.getCenaUslug();
+                dealer.setLastPayment(Main.getDate());
+            }
         }
     }
 
+    /**
+     * @param produkcja
+     * pobranie platformy od Usera za produkcję określoną w parametrze.
+     */
     synchronized
     public static void buyProduction(Produkcja produkcja){
         synchronized (guardianPayment) {
-            saldo += produkcja.getCena();
+            if(promocja && (produkcja instanceof Film || produkcja instanceof Live)){
+                saldo += (produkcja.getCena() - (produkcja.getCena() * (pro/100)));
+            }else
+                saldo += produkcja.getCena();
         }
     }
 
+    /**
+     * @param cena
+     * Kupienie przez usera abonamentu.
+     */
     synchronized
     public static void buyAbonament(int cena){
         synchronized (guardianPayment) {
@@ -170,6 +256,10 @@ public class Main extends Application {
         }
     }
 
+    /**
+     *
+     * Sprawdzanie, czy platforma generuje straty.
+     */
     synchronized
     public static void checkLooses(){
         if(saldo < 0){
@@ -202,6 +292,23 @@ public class Main extends Application {
 
     }
 
+    /**
+     * Losowanie czy promocja obowiązuje
+     */
+    public static void isPromocja(){
+        Random random = new Random();
+        int isPromocja = random.nextInt(1000);
+        int promocjaInt;
+        promocjaInt = random.nextInt(5);
+        if(isPromocja < 30){
+            promocja = true;
+            pro = isPromocja;
+        }else if(promocja && isPromocja > 600){
+            promocja = false;
+            pro = 0;
+        }
+    }
+
     @Override
     public void stop() throws Exception {
         canDealerWork = false;
@@ -210,5 +317,96 @@ public class Main extends Application {
     //    removeAllThreads();
         Thread.sleep(100);
         super.stop();
+    }
+
+
+    /**
+     * zapis Dealrów
+     */
+    public static void saveDealer(){
+        File file = new File(pathDealers);
+        if (file.exists())
+        try {
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file));
+            synchronized (guardianDealer) {
+                if (dealers.size() != 0)
+                    for (Dealer dealer : dealers) {
+                        output.writeObject(dealer);
+                    }
+            }
+            output.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    /**
+     * Zapis Userów.
+     */
+    public static void saveUser(){
+        File file = new File(pathUsers);
+        if(file.exists()){
+            try {
+                ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
+                synchronized (guardianUser) {
+                    if (users.size() != 0)
+                        for (User user : users) {
+                            outputStream.writeObject(user);
+                        }
+                }
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * ładowanie dealerów z pliku.
+     */
+    public static void loadDealer(){
+        File file = new File(pathDealers);
+        if(file.exists())
+        try {
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
+            while (true){
+                    Dealer dealer = (Dealer) inputStream.readObject();
+                    dealer.setCanWork(true);
+                    System.out.println(dealer.getID());
+                    addDealer(dealer);
+            }
+        } catch (IOException e) {
+            System.out.println("Koniec pliku dealerów");
+        }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }finally {
+            file=null;
+        }
+        file = null;
+    }
+
+    /**
+     * Ładowanie Userów z pliku
+     */
+    public static void loadUser(){
+        File file = new File(pathUsers);
+        if(file.exists()){
+            try {
+                    ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file));
+                    while (true){
+                        User user = (User) inputStream.readObject();
+                        addUser(user);
+                    }
+
+            }catch (ClassNotFoundException e){
+                e.printStackTrace();
+            }catch (IOException e){
+                System.out.println("Koniec pliku");
+            }finally {
+                file = null;
+            }
+            file = null;
+        }
     }
 }

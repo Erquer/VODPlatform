@@ -1,39 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
    <top>
-      <HBox prefHeight="58.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="58.0" prefWidth="600.0" BorderPane.alignment="CENTER" spacing="5">
          <children>
             <Button fx:id="addDealerButton" mnemonicParsing="false" onMouseClicked="#setAddDealerButton" text="Dodaj Dealera" />
             <Button fx:id="addUserButton" mnemonicParsing="false" onMouseClicked="#setAddUserButton" text="Dodaj Usera" />
-            <Button fx:id="searchButton" mnemonicParsing="false" text="Wyszukaj" />
-            <Button fx:id="deleteButton" mnemonicParsing="false" text="Usuń" />
+            <Button fx:id="searchButton" mnemonicParsing="false" onMouseClicked="#searchButtonClicked" text="Wyszukaj" />
+            <Button fx:id="deleteButton" mnemonicParsing="false" onMouseClicked="#deleteButtonAction" text="Usuń" />
+            <Button mnemonicParsing="false" onMouseClicked="#refresh" text="odśwież" />
+            <Label text="Saldo" />
+            <Label fx:id="saldo" />
+            <Label text="Data: " />
+            <Label fx:id="data" />
+            <CheckBox fx:id="showAll" mnemonicParsing="false" onAction="#showAllProd" text="Pokaż wszystkie produkcje" />
          </children></HBox>
    </top>
    <bottom>
-      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="170.0" prefWidth="111.0" BorderPane.alignment="CENTER">
          <children>
-         <ListView fx:id="listaDealer" />
-         <ListView fx:id="listaUser" />
+         <ListView fx:id="listaDealer" prefHeight="170" />
+         <ListView fx:id="listaUser" onMouseClicked="#onListaUserClicked" prefHeight="170" />
+            <VBox prefHeight="200.0" prefWidth="100.0" alignment="BOTTOM_RIGHT" >
+               <children>
+                  <Button mnemonicParsing="false" onMouseClicked="#saveAll" text="Save" alignment="BOTTOM_RIGHT"/>
+                  <Button mnemonicParsing="false" onMouseClicked="#loadAll" text="Load" alignment="BOTTOM_RIGHT"/>
+               </children>
+            </VBox>
          </children>
       </HBox>
    </bottom>
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="185.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox fx:id="serialBox" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER" />
-            <HBox fx:id="filmBox" prefHeight="100.0" prefWidth="200.0" />
-            <HBox fx:id="liveBox" prefHeight="100.0" prefWidth="200.0" />
+            <HBox fx:id="serialBox" maxWidth="666" prefHeight="100.0" prefWidth="111.0" style="-fx-borderstyle: solid inside;-fx-border-width: 1;-fx-border-color: black;">
+               <children>
+                  <Button fx:id="prevSerial" mnemonicParsing="false" onMouseClicked="#prevSButton" prefHeight="185" text="&lt;--" />
+                  <ImageView fx:id="s1" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="s2" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="s3" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="s4" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="s5" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <Button fx:id="nextSerialButton" alignment="CENTER" onMouseClicked="#nextSerialButtonClicked" prefHeight="185" text="--&gt;" />
+               </children></HBox>
+            <HBox fx:id="filmBox" maxWidth="666" prefHeight="100.0" prefWidth="111.0" style="-fx-borderstyle: solid inside;-fx-border-width: 1;-fx-border-color: black;">
+               <children>
+                  <Button fx:id="prevFilm" mnemonicParsing="false" onMouseClicked="#prevFButton" prefHeight="185" text="&lt;--" />
+                  <ImageView fx:id="f1" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="f2" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="f3" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="f4" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="f5" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <Button fx:id="nextFilmButton" alignment="CENTER" onMouseClicked="#nextFilmButtonClicked" prefHeight="185" text="--&gt;" />
+               </children></HBox>
+            <HBox fx:id="liveBox" maxWidth="666" prefHeight="100.0" prefWidth="111.0" style="-fx-borderstyle: solid inside;-fx-border-width: 1;-fx-border-color: black;">
+               <children>
+                  <Button fx:id="prevLive" mnemonicParsing="false" onMouseClicked="#prevLButton" prefHeight="185" text="&lt;--" />
+                  <ImageView fx:id="l1" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="l2" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="l3" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="l4" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="l5" fitHeight="185.0" fitWidth="111.0" onMouseClicked="#showDetale" pickOnBounds="true" preserveRatio="true" />
+                  <Button fx:id="nextLiveButton" alignment="CENTER" onMouseClicked="#nextLiveButtonClicked" prefHeight="185" text="--&gt;" />
+               </children></HBox>
          </children>
       </VBox>
    </center>
-   <right>
-      <ListView fx:id="produkcje" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-   </right>
 </BorderPane>

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="VODPlatform:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/VODPlatform_jar</output-path>
+    <root id="archive" name="VODPlatform.jar">
+      <element id="module-output" name="VODPlatform" />
+    </root>
+  </artifact>
+</component>

@@ -4,7 +4,6 @@ import Enums.Aktorzy;
 import Enums.Kraje;
 import Enums.Typ;
 import Threads.Dealer;
-import javafx.scene.image.Image;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class Film extends Produkcja {
         return linki;
     }
 
-    public Film(Image obrazek, String nazwa, String opis, LocalDate data, Dealer dealer, List<Kraje> eKraje, List<Aktorzy> obsada, double ocena, int cena, Typ typ, List<String> linki) {
+    public Film(ProdImage obrazek, String nazwa, String opis, LocalDate data, Dealer dealer, List<Kraje> eKraje, List<Aktorzy> obsada, double ocena, int cena, Typ typ, List<String> linki) {
         super(obrazek, nazwa, opis, data, dealer, eKraje, obsada, ocena, cena);
         this.typ = typ;
         this.linki = linki;
@@ -78,15 +77,7 @@ public class Film extends Produkcja {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Produkcje.Film: " +this.getNazwa() + " " + this.getOpis() + " " + this.getData() + " " + this.getCena()+ " " + this.typ);
-        for(int i = 0; i < this.geteKraje().size();i++){
-            sb.append( " " + this.geteKraje().get(i));
-        }
-        for(int i =0; i < this.linki.size(); i++){
-            sb.append(" " + this.linki.get(i) );
-        }
-        sb.append(" " +this.getDealer().getID());
-        return sb.toString();
+
+        return "Film: " +super.toString() + " Typ: " + this.typ;
     }
 }

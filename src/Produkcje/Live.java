@@ -4,7 +4,6 @@ import Enums.Aktorzy;
 import Enums.Kraje;
 import GUI.Main;
 import Threads.Dealer;
-import javafx.scene.image.Image;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,7 +34,12 @@ public class Live extends Produkcja {
 
     }
 
-    public Live(Image obrazek, String nazwa, String opis, LocalDate data, Dealer dealer, List<Kraje> eKraje, List<Aktorzy> obsada, double ocena, int cena) {
+    public Live(ProdImage obrazek, String nazwa, String opis, LocalDate data, Dealer dealer, List<Kraje> eKraje, List<Aktorzy> obsada, double ocena, int cena) {
         super(obrazek, nazwa, opis, data, dealer, eKraje, obsada, ocena, cena);
+    }
+
+    @Override
+    public String toString() {
+        return "Live: "+ super.toString() + "Data streamu: " + this.liveStream.toString();
     }
 }

@@ -4,8 +4,8 @@ import Enums.Aktorzy;
 import Enums.Kraje;
 import Enums.Typ;
 import Threads.Dealer;
-import javafx.scene.image.Image;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +17,7 @@ public class Serial extends Produkcja {
 private Typ typ;
 private List<Sezon> sezons;
 
-    public Serial(Image obrazek, String nazwa, String opis, LocalDate data, Dealer dealer, List<Kraje> eKraje, List<Aktorzy> obsada, double ocena, int cena, Typ typ, List<Sezon> sezons) {
+    public Serial(ProdImage obrazek, String nazwa, String opis, LocalDate data, Dealer dealer, List<Kraje> eKraje, List<Aktorzy> obsada, double ocena, int cena, Typ typ, List<Sezon> sezons) {
         super(obrazek, nazwa, opis, data, dealer, eKraje, obsada, ocena, cena);
         this.typ = typ;
         this.sezons = sezons;
@@ -48,9 +48,12 @@ private List<Sezon> sezons;
         }
 
     }
+    public List<Sezon.Odcinek> getOdcinkiSezonu(int sezon){
+        return this.getSezons().get(sezon).getOdcinki();
+    }
 
-    private class Sezon {
-    private List<Odcinek> odcinki;
+    private class Sezon implements Serializable {
+    protected List<Odcinek> odcinki;
 
         public List<Odcinek> getOdcinki() {
             return odcinki;
@@ -65,7 +68,7 @@ private List<Sezon> sezons;
         }
     }
 
-    private class Odcinek {
+    protected class Odcinek implements Serializable {
         private int dlugosc;
         private Date premiera;
 
@@ -97,6 +100,6 @@ private List<Sezon> sezons;
 
     @Override
     public String toString() {
-        return "Produkcje.Serial o: " + sezons.size() + " sezonach";
+        return "Serial: " + super.toString() + " Typ: " + this.typ + " Sezony " + this.getSezons().size();
     }
 }

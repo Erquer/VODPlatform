@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<?import javafx.scene.control.Button?>
+<DialogPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.searchController">
+<content>
+    <BorderPane>
+        <top>
+            <GridPane fx:id="gridPane">
+                <RadioButton fx:id="name" text="Nazwa" GridPane.columnIndex="1" GridPane.rowIndex="0" onMouseClicked="#searchPrep">
+                  <toggleGroup>
+                     <ToggleGroup fx:id="choice" />
+                  </toggleGroup></RadioButton>
+                <RadioButton fx:id="actor" text="Aktor" toggleGroup="$choice" GridPane.columnIndex="2" GridPane.rowIndex="0" onMouseClicked="#searchPrep"/>
+                <Label text="Podaj nazwę: " GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.valignment="TOP" />
+                <TextField fx:id="nameSearch" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Button text="Szukaj" GridPane.rowIndex="0" GridPane.columnIndex="3" onMouseClicked="#searchButtonClicked"/>
+               <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+            </GridPane>
+        </top>
+        <right>
+            <ListView fx:id="actors" />
+        </right>
+        <center>
+            <ListView fx:id="searched" />
+        </center>
+    </BorderPane>
+
+</content>
+</DialogPane>

@@ -1,12 +1,10 @@
 package Threads;
 
 import GUI.Main;
-import Produkcje.Film;
-import Produkcje.Live;
-import Produkcje.Produkcja;
-import Produkcje.Serial;
+import Produkcje.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,26 +13,37 @@ public class Dealer implements Runnable, Serializable {
         private int cenaUslug;
         private String ID;
         private List<Produkcja> stworzoneFilmy;
+        private  transient LocalDate lastPayment;
 
-        private transient boolean canWork;
+    public void setLastPayment(LocalDate lastPayment) {
+        this.lastPayment = lastPayment;
+    }
+
+    public LocalDate getLastPayment() {
+        return lastPayment;
+    }
+
+    private transient boolean canWork;
 
         @Override
         public void run() {
 
             while (Main.isCanDealerWork()) {
-                if (Main.isCanDealerWork() && canWork) {
-
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                this.addProd();
-                if (!canWork) {
-                    System.out.println("Zakonczyłem prace");
+                if (canWork) {
+                    if(canMakeProduction())
+                                this.addProd();
+                    Main.payToDealer(this);
+                   // System.out.println("stworzyłem produkcje");
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+            }else if (!canWork) {
+                    this.stworzoneFilmy.removeAll(this.stworzoneFilmy);
+                    System.out.println("Teoretycznie usunąłem wszystko." + this.stworzoneFilmy.size());
                     break;
                 }
-            }
 
         }
 
@@ -46,9 +55,9 @@ public class Dealer implements Runnable, Serializable {
     }
 
     public Dealer() {
-
                 this.stworzoneFilmy = new ArrayList<>();
                 StringBuilder sb = new StringBuilder();
+                this.lastPayment = null;
                 for(int i = 0; i < 10; i++){
                         sb.append(new Random().nextInt(9));
                 }
@@ -58,11 +67,7 @@ public class Dealer implements Runnable, Serializable {
         }
 
 
-       /* public void addProd(Produkcje.Produkcja prod){
-            if(prod instanceof Produkcje.Film) this.stworzoneFilmy.add((Produkcje.Film)prod);
-            else if(prod instanceof Produkcje.Serial) this.stworzoneSeriale.add((Produkcje.Serial) prod);
-            else if(prod instanceof Produkcje.Live) this.stworzoneLive.add((Produkcje.Live) prod);
-        }*/
+
         public Produkcja addProd(){
             int i;
             Random random = new Random();
@@ -92,6 +97,7 @@ public class Dealer implements Runnable, Serializable {
         }
         public void  stop(){
             System.out.println(this + " Kończy pracę.");
+            canWork = false;
         }
 
         public int getCenaUslug() {
@@ -116,4 +122,14 @@ public class Dealer implements Runnable, Serializable {
 
         return sb.toString();
     }
+
+    private boolean canMakeProduction(){
+            int prodSize;
+            int userSize;
+            prodSize = Main.getFilmy().size();
+            userSize = Main.getUsers().size();
+            if(prodSize/4 < userSize && userSize > 0) return true;
+            else return false;
+    }
+
 }

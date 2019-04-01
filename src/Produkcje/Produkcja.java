@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -16,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Produkcja implements Serializable {
     //wspólne zmienne wszystkich produkcji
-    private Image obrazek;
+    private ProdImage obrazek;
     private String nazwa;
     private String opis;
     private LocalDate data;
@@ -25,6 +26,9 @@ public class Produkcja implements Serializable {
     private List<Aktorzy> obsada;
     private double ocena;
     private int cena;
+
+
+    private HashMap<LocalDate, Integer> ogladalnosc;
 
 
     public int getCena() {
@@ -41,7 +45,7 @@ public class Produkcja implements Serializable {
 
 
 
-    public Produkcja(Image obrazek, String nazwa, String opis, LocalDate data, Dealer dealer, List<Kraje> eKraje, List<Aktorzy> obsada, double ocena, int cena) {
+    public Produkcja(ProdImage obrazek, String nazwa, String opis, LocalDate data, Dealer dealer, List<Kraje> eKraje, List<Aktorzy> obsada, double ocena, int cena) {
         this.obrazek = obrazek;
         this.nazwa = nazwa;
         this.opis = opis;
@@ -54,7 +58,22 @@ public class Produkcja implements Serializable {
 
     }
 
+    public HashMap<LocalDate, Integer> getOgladalnosc() {
+        return ogladalnosc;
+    }
+
+    public void wached(LocalDate data){
+        if(this.ogladalnosc.containsKey(data)){
+              Integer i = new Integer(this.ogladalnosc.get(data).intValue());
+              i++;
+              this.ogladalnosc.replace(data,i);
+        }else{
+            this.ogladalnosc.put(data, 1);
+        }
+    }
+
     public Produkcja(Dealer dealer) {
+        this.ogladalnosc = new HashMap<>();
         this.eKraje = new ArrayList<>();
         this.obsada = new ArrayList<>();
         Random random = new Random();
@@ -63,7 +82,7 @@ public class Produkcja implements Serializable {
         int in = random.nextInt(Obrazy.values().length);
         sb.append("Produkcje\\"+Obrazy.values()[in]+".png");
 
-        this.obrazek= new Image(sb.toString());
+        this.obrazek= new ProdImage(sb.toString(),this);
 
         sb.delete(0,sb.length());
 
@@ -145,15 +164,26 @@ public class Produkcja implements Serializable {
     }
 
     public void showData(){
-        System.out.println("Produkcje.Film: \n"+
-                "Tytuł: " +this.getNazwa() +
-                "\nOpis: " + this.getOpis() +
-                "\nCena: " + this.getCena() +
-                "\nData premiery: " + this.getData() +
-                "\nOcena: " + this.getOcena()+ "\nLinki do zwiastunów: ");
-        System.out.println("Enums.Kraje produkcji: ");
+        System.out.println("Tytuł: " +this.getNazwa() +
+                " Opis: " + this.getOpis() +
+                " Cena: " + this.getCena() +
+                " Data premiery: " + this.getData() +
+                " Ocena: " + this.getOcena()+ " Linki do zwiastunów: ");
+        System.out.println("Kraje produkcji: ");
         for(int i = 0; i < this.geteKraje().size();i++){
             System.out.println(this.geteKraje().get(i));
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Tytuł "  + nazwa +
+                " Opis " + opis +
+                " Data " + data +
+                " Dealer " + dealer +
+                " Kraje " + eKraje +
+                " Obsada " + obsada +
+                " Ocena " + ocena +
+                " cena " + cena;
     }
 }

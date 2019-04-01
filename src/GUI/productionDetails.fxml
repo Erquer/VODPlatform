@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<?import javafx.scene.control.ListView?>
-<DialogPane headerText="Dane Produkcji" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.ProductionController">
+<DialogPane headerText="Dane Produkcji" prefHeight="800.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.ProductionController">
    <content>
       <GridPane>
         <columnConstraints>
@@ -24,25 +29,36 @@
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
         </rowConstraints>
          <Label text="Tytuł" GridPane.columnIndex="0" GridPane.rowIndex="0" />
           <TextField fx:id="tytul" GridPane.columnIndex="1" GridPane.rowIndex="0" />
           <Label text="Opis" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-          <TextField fx:id="opis" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+          <TextArea fx:id="opis" prefHeight="60" GridPane.columnIndex="1" GridPane.rowIndex="1" />
           <Label text="Data produkcji" GridPane.columnIndex="0" GridPane.rowIndex="2" />
           <TextField fx:id="data" GridPane.columnIndex="1" GridPane.rowIndex="2" />
           <Label text="Dystrybutor" GridPane.columnIndex="0" GridPane.rowIndex="3" />
           <TextField fx:id="dealer" GridPane.columnIndex="1" GridPane.rowIndex="3" />
           <Label text="Kraje" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-          <ListView fx:id="kraje" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-          <Label text="Linki" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-          <ListView fx:id="linki" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+          <ListView fx:id="kraje" maxHeight="60" prefHeight="50" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+          <Label fx:id="link" text="Linki" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+          <ListView fx:id="linki" maxHeight="60" prefHeight="50" GridPane.columnIndex="1" GridPane.rowIndex="5" />
           <Label text="Cena" GridPane.columnIndex="0" GridPane.rowIndex="6" />
           <TextField fx:id="cena" GridPane.columnIndex="1" GridPane.rowIndex="6" />
           <Label text="Ocena" GridPane.columnIndex="0" GridPane.rowIndex="7" />
           <TextField fx:id="ocena" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-          <Label text="Aktorzy" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
-          <ListView fx:id="aktorzy" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+          <Label text="Aktorzy" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+          <ListView fx:id="aktorzy" maxHeight="60" prefHeight="50" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+          <ImageView fx:id="obraz" fitHeight="185" fitWidth="111" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+         <LineChart fx:id="wykres" title="oglądalność" GridPane.rowIndex="9">
+           <xAxis>
+             <CategoryAxis side="BOTTOM" />
+           </xAxis>
+           <yAxis>
+             <NumberAxis side="LEFT" />
+           </yAxis>
+         </LineChart>
       </GridPane>
    </content>
 </DialogPane>

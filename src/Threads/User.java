@@ -24,14 +24,12 @@ public class User implements Runnable, Serializable {
     private List<Produkcja> kupioneFilmy;
     private Map<Produkcja, LocalDate> datyKupionych;
     private transient boolean canWork;
-    private LocalDate mainDate;
+
 
     @Override
     public void run() {
 
         while(Main.isCanUserWork()) {
-            mainDate = Main.getDate();
-            System.out.println("Mamy dzisiaj: " + mainDate);
             if(canWork){
                 Random random = new Random();
                 int wybor = random.nextInt(10000);
@@ -137,7 +135,6 @@ public class User implements Runnable, Serializable {
         long maxDay = LocalDate.of(2020,12,31).toEpochDay();
         long randomDay = ThreadLocalRandom.current().nextLong(minDay,maxDay);
         this.birth = LocalDate.ofEpochDay(randomDay);
-        this.mainDate = Main.getDate();
         this.terminAbonamentu = null;
         this.abonament = null;
     }
@@ -152,6 +149,9 @@ public class User implements Runnable, Serializable {
         return sb.toString();
     }
 
+    /**
+     * Kupowanie filmu, dodawanie do listy, wyznaczenie terminu ważności.
+     */
     public void kupFilm() {
         if(Main.getFilmy().size() > 0) {
             int los = new Random().nextInt(Main.getFilmy().size() + 1);
@@ -162,16 +162,16 @@ public class User implements Runnable, Serializable {
                     if (prod instanceof Film) {
                         this.kupioneFilmy.add(prod);
                         Main.buyProduction(prod);
-                        this.datyKupionych.put(prod, mainDate.plusWeeks(3));
+                        this.datyKupionych.put(prod, Main.getDate().plusWeeks(3));
                         System.out.println(this.ID + " kupiłem Produkcje.Film " + prod.getNazwa() + " i mogę go oglądać do" + this.datyKupionych.get(prod));
-                    } else if (prod instanceof Live && ((Live) prod).getLiveStream().isBefore(mainDate)) {
+                    } else if (prod instanceof Live && ((Live) prod).getLiveStream().isBefore(Main.getDate())) {
                         this.kupioneFilmy.add(prod);
                         this.datyKupionych.put(prod, ((Live) prod).getLiveStream());
                         Main.buyProduction(prod);
                         System.out.println(this.ID + " kupiłem Produkcje.Live " + prod.getNazwa() + " i jest dostępny w " + this.datyKupionych.get(prod));
                     } else if (prod instanceof Serial) {
                         this.kupioneFilmy.add(prod);
-                        this.datyKupionych.put(prod, mainDate.plusWeeks(3));
+                        this.datyKupionych.put(prod, Main.getDate().plusWeeks(3));
                         Main.buyProduction(prod);
                         System.out.println(this.ID + " kupiłem Produkcje.Serial " + prod.getNazwa() + " i mogę go oglądać do" + this.datyKupionych.get(prod));
                     }
@@ -182,7 +182,7 @@ public class User implements Runnable, Serializable {
                        // GUI.Main.buyProduction(prod);
                         this.datyKupionych.put(prod, this.terminAbonamentu);
                         System.out.println(this.ID + " dodałem do biblioteki " + prod.getNazwa() + " i mogę go oglądać do " + this.datyKupionych.get(prod));
-                    } else if (prod instanceof Live && prod.getData().isBefore(mainDate)) {
+                    } else if (prod instanceof Live && prod.getData().isBefore(Main.getDate())) {
                         this.kupioneFilmy.add(prod);
                         this.datyKupionych.put(prod, ((Live) prod).getLiveStream());
                         Main.buyProduction(prod);
@@ -213,6 +213,9 @@ public class User implements Runnable, Serializable {
         }
 
 
+    /**
+     * Kupowanie abonamentu
+     */
     public void kupAbonament(){
             int i = new Random().nextInt(3);
             this.abonament = Abonament.values()[i];
@@ -236,6 +239,33 @@ public class User implements Runnable, Serializable {
     }
 
 
+    public String getID() {
+        return ID;
+    }
+
+    public LocalDate getBirth() {
+        return birth;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public Abonament getAbonament() {
+        return abonament;
+    }
+
+    public LocalDate getTerminAbonamentu() {
+        return terminAbonamentu;
+    }
+
+    /**
+     * Funkcja, w której następuje wybór produckji do oglądania
+     */
     public void watch(){
         Random random = new Random();
 
@@ -244,6 +274,7 @@ public class User implements Runnable, Serializable {
             Produkcja produkcja = this.kupioneFilmy.get(wybor);
             if ((produkcja instanceof Film || produkcja instanceof Serial)) {
                 System.out.println(this.ID + " ogląda -" + produkcja.getNazwa());
+                produkcja.wached(Main.getDate());
                 if (produkcja instanceof Film) {
                     try {
                         Thread.sleep(12000);
@@ -260,6 +291,7 @@ public class User implements Runnable, Serializable {
                 }
             } else if (produkcja instanceof Live && datyKupionych.get(produkcja).isEqual(Main.getDate())) {
                 System.out.println(this.ID + " Produkcje.Live ogląda- " + produkcja.getNazwa());
+                produkcja.wached(Main.getDate());
                 try {
                     Thread.sleep(6000);
                 } catch (InterruptedException e) {
@@ -269,6 +301,9 @@ public class User implements Runnable, Serializable {
 
     }
 
+    /**
+     * Sprawdzenie dat w swojej bazie dostępnych filmów
+     */
     private void checkDates(){
         if(abonament == null){
             for(Iterator<Produkcja> iterator = this.kupioneFilmy.iterator();iterator.hasNext();){
@@ -286,11 +321,11 @@ public class User implements Runnable, Serializable {
         }else if(abonament != null){
             for(Iterator<Produkcja> iterator = this.kupioneFilmy.iterator();iterator.hasNext();){
                 Produkcja produkcja = iterator.next();
-                if(this.datyKupionych.get(produkcja).isEqual(Main.getDate()) && !(produkcja instanceof Live)){
+                if((this.datyKupionych.get(produkcja).isEqual(Main.getDate()) || Main.getDate().isAfter(this.datyKupionych.get(produkcja))) && !(produkcja instanceof Live)){
                     System.out.println("Enums.Abonament|Usuwam z biblioteki: " + produkcja.getNazwa());
                     this.kupioneFilmy.remove(produkcja);
                     this.datyKupionych.remove(produkcja);
-                }else if(produkcja instanceof Live && this.datyKupionych.get(produkcja).isEqual(Main.getDate())){
+                }else if(produkcja instanceof Live && (this.datyKupionych.get(produkcja).isEqual(Main.getDate()) || Main.getDate().isAfter(this.datyKupionych.get(produkcja)))){
                     System.out.println("Enums.Abonament|Usuwam Produkcje.Live: " + produkcja.getNazwa());
                     this.datyKupionych.remove(produkcja);
                     this.kupioneFilmy.remove(produkcja);
@@ -298,9 +333,13 @@ public class User implements Runnable, Serializable {
             }
         }
     }
+
+    /**
+     * sprawdzenie terminu abonamentu
+     */
     public void checkAbonament(){
         if((abonament != null)){
-            if(terminAbonamentu.isEqual(mainDate)){
+            if(terminAbonamentu.isEqual(Main.getDate())){
                 abonament = null;
                 terminAbonamentu = null;
                 System.out.println("Enums.Abonament się skończył u " + this.ID );
@@ -313,4 +352,15 @@ public class User implements Runnable, Serializable {
     }
 
 
+    public Map<Produkcja, LocalDate> getDatyKupionych() {
+        return datyKupionych;
+    }
+
+    public void stop(){
+        this.canWork = false;
+        Main.getUsers().remove(this);
+        Main.getDealerThreads().remove(this);
+        System.out.println(this + "Kończy działać.");
+
+    }
 }

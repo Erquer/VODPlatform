@@ -1,25 +1,22 @@
 package GUI;
 
+import Produkcje.Produkcja;
 import Threads.Dealer;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
-
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 
 public class DetailsController {
-    @FXML
-    private TextArea detailsArea;
-    @FXML
-    private Button actionButton;
+@FXML
+    private TextField id;
+@FXML
+    private TextField cena;
+@FXML
+    private ListView<Produkcja> produkcje;
 
-
-
-    public void showData(Dealer dealer){
-        detailsArea.setText(dealer.toStringForDetails());
-    }
-
-    public void buttonClicked(MouseEvent event){
-        detailsArea.appendText("Button Clicked");
-    }
+public void showData(Dealer dealer){
+    id.setText(dealer.getID());
+    cena.setText(Integer.toString(dealer.getCenaUslug()));
+    produkcje.getItems().addAll(dealer.getStworzoneProdukcje());
+}
 }
